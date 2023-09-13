@@ -2,10 +2,10 @@ package ru.netology;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.conditions.Text;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import com.codeborne.selenide.selector.ByText;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.Keys;
 import ru.netology.DataGenerator;
 
@@ -20,6 +20,15 @@ import static com.codeborne.selenide.Selenide.open;
 
 class DeliveryTest {
 
+    @BeforeAll
+    static void setUpAll(){
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeAllListeners();
+    }
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
@@ -50,7 +59,7 @@ class DeliveryTest {
         $(".button").click();
         $("[data-test-id='replan-notification'] .notification__content")
                 .shouldHave(exactText("У вас уже запланирована встреча на другую дату. Перепланировать?"))
-                .shouldBe(visible, Duration.ofSeconds(5));
+                .shouldBe(visible, Duration.ofSeconds(3));
 
         $(byText("Перепланировать")).click();
 
